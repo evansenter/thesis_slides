@@ -1,0 +1,32 @@
+\frametitle{Concrete Example}
+  \begin{columns}[t]
+  \column{.25\textwidth}
+  \begin{block}{Input}
+  \vspace{1em}
+  \ms{GGAAACC} $= \seq$  \\
+  \ms{.......} $= \strA$ \\
+  \ms{.(...).} $= \strB$
+  \end{block}
+
+  \column{.37\textwidth}
+  \begin{block}{Structures}
+  \vspace{1em}
+  \ms{.......}\;$0.00 \frac{\text{kcal}}{\text{mol}}, \alert{[0, 1]}$
+  \ms{.(...).}\;$4.40 \frac{\text{kcal}}{\text{mol}}, \alert{[1, 0]}$
+  \ms{(....).}\;$2.30 \frac{\text{kcal}}{\text{mol}}, \alert{[1, 2]}$
+  \ms{.(....)}\;$4.10 \frac{\text{kcal}}{\text{mol}}, \alert{[1, 2]}$
+  \ms{(.....)}\;$4.20 \frac{\text{kcal}}{\text{mol}}, \alert{[1, 2]}$
+  \ms{((...))}\;$2.10 \frac{\text{kcal}}{\text{mol}}, \alert{[2, 1]}$
+  \end{block}
+
+  \column{.38\textwidth}
+  \begin{block}{Output}
+  \begin{align*}
+  \begin{bmatrix}
+  0 & \alert{0.9595} & 0 \\
+  \alert{0.0001} & 0 & \alert{0.0086} \\
+  0 & \alert{0.0318} & 0
+  \end{bmatrix}
+  \end{align*}
+  \end{block}
+  \end{columns}
