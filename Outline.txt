@@ -1,0 +1,57 @@
+Background on my work
+
+Outline of talk
+
+Why do we care about RNA at all?
+
+Original picture:
+
+  Images/crick1970.png
+  Crick, F. (1970). Central dogma of molecular biology. Nature.
+
+Present day:
+
+  Peptide bond catalysis
+  Intron splicing
+  Post-transcriptional gene regulation
+    RNAi (Fire, A. Z. and Mello, C. C. received 2006 Nobel Prize in Physiology or Medicine)
+  Transcriptional and translational allosteric regulation via riboswitches
+  Retranslation events (Selenocysteine insertion)
+  Ribosomal frameshift
+
+Motivation for folding pathways / RNA kinetics
+
+  hok/sok
+
+Why isn't it possible to exhaustively compute folding kinetics
+
+  $s_n \sim 1.10437 \cdot 2.61803^n / n^{\frac{3}{2}}$
+
+  from Stein and Waterman, 1979 indicates
+
+Discussion of current approaches (and their limitations)
+
+Two approaches:
+
+  Explicit solution of master equation
+
+    Treekin
+    Hermes
+
+  Simulations
+
+    Kinfold
+    KFOLD
+    Kinefold
+
+What I will show in the end
+
+How to get there (story in 3 parts)
+
+FFTbor
+
+  Numeric instability
+
+FFTbor2D
+
+Hermes
