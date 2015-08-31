@@ -2,6 +2,8 @@
 \usepackage{pgfpages}
 
 % \setbeameroption{show notes}
+%\setbeameroption{hide notes}
+% \setbeameroption{show only notes}
 % \setbeameroption{show notes on second screen=right}
 \usepackage[T1]{fontenc}
 \usepackage{libertine}
@@ -12,12 +14,13 @@
 \usepackage{algpseudocode}
 \usepackage{array}
 \usepackage{booktabs}
-\usepackage[center]{caption}
+\usepackage[center,justification=justified]{caption}
 \usepackage{color}
 \usepackage{graphicx}
 \usepackage{mathtools}
 \usepackage{rnamacros}
 \usepackage{tabularx}
+\usepackage{xfrac}
 \usepackage{xspace}
 
 \captionsetup[figure]{labelformat=empty}
@@ -27,7 +30,7 @@
 \setbeamerfont{caption}{size=\tiny}
 \setbeamercovered{transparent}
 
-\newcommand{\slidefigure}[2][1]{\includegraphics[width=#1\textwidth,height=#1\textheight,keepaspectratio]{#2}}
+\newcommand{\slidefigure}[2][1]{\centering\includegraphics[width=#1\textwidth,height=#1\textheight,keepaspectratio]{#2}}
 \newcommand{\btVFill}{\vskip 0pt plus 1filll}
 
 \title[Coarse-Grained RNA Folding Kinetics]{On the Use of Coarse-Grained Thermodynamic Landscapes to Efficiently Estimate Folding Kinetics for RNA Molecules}
@@ -63,7 +66,7 @@
 
 		\column{.45\textwidth}
 		\begin{figure}
-			\centering \slidefigure{ucsb} \caption{University of California, Santa Barbara}
+			\slidefigure{ucsb} \caption{University of California, Santa Barbara}
 		\end{figure}
 	\end{columns}
 \end{frame}
@@ -91,27 +94,79 @@
 \end{frame}
 
 \begin{frame}
-	\frametitle{How biologists See bioinfor{\em magicians}}
-	\begin{figure}
-		\centering \slidefigure{nemo}
-	\end{figure}
+	\frametitle{How biologists see bioinfor{\em magicians}}
+	\slidefigure{nemo}
 \end{frame}
 
 \begin{frame}
 	\frametitle{A biologist when stumbling into a math-heavy talk\dots}
-	\begin{figure}
-		\centering \slidefigure{nemofocus}
-	\end{figure}
+	\slidefigure{nemofocus}
 \end{frame}
 
 \begin{frame}
 	\frametitle{What we aim for\dots}
-	\begin{figure}
-		\centering \slidefigure{nemoturtle}
-	\end{figure}
+	\slidefigure{nemoturtle}
 \end{frame}
 
-\section{Background}
+\section{The really big picture}
+
+\begin{frame}
+  \frametitle{Organization of Hermes}
+  \slidefigure{Figures/Hermes/softwareOrg}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Population occupancy curves}
+  \begin{figure}
+    \slidefigure[.75]{Figures/Hermes/populationOccupancyCurves}
+    \caption{Population occupancy curves computed with \ffteq for the 56 nt conformational switch {\em L. collosoma} spliced leader RNA}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \frametitle{How approximate are the kinetics?}
+  \begin{columns}
+    \column{.5\textwidth}
+    \begin{figure}
+      \slidefigure{Figures/Hermes/rnaMfptHastingsKinfold}
+      \caption{Scatter plot of the natural logarithm of times from \rnamfpt versus \kinfold}
+    \end{figure}
+
+    \column{.5\textwidth}
+    \begin{figure}
+      \slidefigure{Figures/Hermes/rnaMfptHastingsFftMfptHastings}
+      \caption{Scatter plot of the natural logarithm of times for \rnamfpt versus \fftmfpt}
+    \end{figure}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Comparison of various kinetics programs}
+  \resizebox{\linewidth}{!}{
+    \centering
+    \begin{tabular}
+      {*{9}{l}} \toprule \small{Hastings (Yes\textbackslash No)} & \small{\rnamfpt} & \small{\rnaeq} & \small{\kinfold} & \small{\fftmfpt} & \small{\rnatwofold} & \small{\fftbor} & \small{\barrierseq} & \small{\ffteq} \\
+      \cmidrule(l){2-9}
+      % rnamfpt rnaeq kinfold fftmfpt rnatwofold fftbor barrierseq ffteq
+      \small{\rnamfpt} & $1$ & $0.5683$ & \textcolor{red}{$0.7945$} & \textcolor{red}{$0.5060$} & $0.5110$ & $0.5204$ & $0.5280$ & $0.4472$ \\
+      \small{\rnaeq} & $0.5798$ & $1$ & $0.7814$ & $0.7043$ & $0.7025$ & $0.5080$ & \textcolor{blue}{$0.5979$} & \textcolor{blue}{$0.6820$} \\
+      \small{\kinfold} & \textcolor{red}{\textbf{$0.7933$}} & $0.7507$ & $1$ & \textcolor{red}{$0.7312$} & $0.7358$ & $0.6241$ & $0.6328$ & $0.6445$ \\
+      \small{\fftmfpt} & \textcolor{red}{\textbf{$0.6035$}} & $0.7935$ & \textcolor{red}{$0.7608$} & $1$ & $0.9980$ & $0.5485$ & $0.8614$ & $0.9589$ \\
+      \small{\rnatwofold} & $0.6076$ & $0.7919$ & $0.7655$ & $0.9983$ & $1$ & $0.5584$ & $0.8538$ & $0.9515$ \\
+      \small{\fftbor} & $0.5416$ & $0.5218$ & $0.6241$ & $0.5748$ & $0.5855$ & $1$ & $0.3450$ & $0.4229$ \\
+      \small{\barrierseq} & $0.6346$ & \textcolor{blue}{$0.6578$} & $0.6328$ & $0.8310$ & $0.8217$ & $0.3450$ & $1$ & \textcolor{blue}{$0.9149$} \\
+      \small{\ffteq} & $0.5614$ & \textcolor{blue}{$0.7916$} & $0.6966$ & $0.9670$ & $0.9590$ & $0.4757$ & \textcolor{blue}{$0.8940$} & $1$ \\
+      \bottomrule
+    \end{tabular}
+  } \vspace{2em}
+  \begin{itemize}
+    \scriptsize
+    \item \rnamfpt, \fftmfpt, \rnaeq, and \ffteq included in the \hermes package
+    \item \rnatwofold (Lorenz {\em et. al.}, 2009), \barrierseq (Flamm {\em et. al.}, 2002), and \fftbor (Senter {\em et. al.}, 2012) kinetics computed with \hermes
+  \end{itemize}
+\end{frame}
+
+\section{ncRNA background}
 
 \begin{frame}
 	\frametitle{Why do we care about RNA?}
@@ -124,12 +179,12 @@
 				\item<2-> Transfer RNA (tRNA)
 				\item<2-> Ribosomal RNA (rRNA)
 			\end{itemize}
-			\item<3-> Diverse roles for ncRNA beyond rRNA and tRNA
+			\item<3-> Diverse roles for ncRNA beyond tRNA and rRNA
 		\end{itemize}
 
 		\column{.45\textwidth}
 		\begin{figure}
-			\centering \slidefigure{crick1970} \caption{Crick, F. (1970). Central dogma of molecular biology. Nature.}
+			\slidefigure{crick1970} \caption{Crick, F. (1970). Central dogma of molecular biology. Nature.}
 		\end{figure}
 	\end{columns}
 \end{frame}
@@ -205,18 +260,16 @@
 
 % Hopefully these breif examples have helped to establish the diverse cellular roles that ncRNAs are responsible for.
 
+\section{Kinetic justification}
+
 \begin{frame}
 	\frametitle{{\em hok/sok} and kinetics}
 	\begin{columns}
 		\column{.5\textwidth}
-		\begin{figure}
-			\centering \slidefigure{r1present}
-		\end{figure}
+		\slidefigure{r1present}
 
 		\column{.5\textwidth}
-		\begin{figure}
-			\centering \slidefigure{r1missing}
-		\end{figure}
+		\slidefigure{r1missing}
 	\end{columns}
 
 	\btVFill
@@ -226,24 +279,24 @@
 	\end{center}
 \end{frame}
 
-\begin{frame}
-	\frametitle{{\em hok/sok} structures}
-	\begin{figure}
-		\centering \slidefigure{hoksoksequence} \caption{Adapted from Thisted, T., \& Gerdes, K. (1992). Mechanism of post-segregational killing by the {\em hok}/{\em sok} system of plasmid R1. Sok antisense RNA regulates {\em hok} gene expression indirectly through the overlapping {\em mok} gene. Journal of Molecular Biology, 223(1), 41--54.}
-	\end{figure}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{{\em hok/sok} structures}
+% 	\begin{figure}
+% 		\slidefigure{hoksoksequence} \caption{Adapted from Thisted, T., \& Gerdes, K. (1992). Mechanism of post-segregational killing by the {\em hok}/{\em sok} system of plasmid R1. Sok antisense RNA regulates {\em hok} gene expression indirectly through the overlapping {\em mok} gene. Journal of Molecular Biology, 223(1), 41--54.}
+% 	\end{figure}
+% \end{frame}
 
 \begin{frame}
 	\frametitle{{\em hok} folding kinetics}
 	\begin{columns}
 		\column{.65\textwidth}
 		\begin{figure}
-			\centering \slidefigure[.7]{hoktranscription} \caption{\tiny Adapted from Nagel, J. H., Gultyaev, A. P., Gerdes, K., \& Pleij, C. W. (1999). Metastable structures and refolding kinetics in hok mRNA of plasmid R1. RNA, 5(11), 1408--1418.}
+			\slidefigure[.7]{hoktranscription} \caption{Adapted from Nagel, J. H., Gultyaev, A. P., Gerdes, K., \& Pleij, C. W. (1999). Metastable structures and refolding kinetics in hok mRNA of plasmid R1. RNA, 5(11), 1408--1418.}
 		\end{figure}
 
 		\column{.35\textwidth}
 		\begin{figure}
-			\centering \slidefigure{hokrefoldingkinetics} \caption{\tiny Nagel, J. H. A., Gultyaev, A. P., Oist{\"a}m{\"o}, K. J., Gerdes, K., \& Pleij, C. W. A. (2002). A pH-jump approach for investigating secondary structure refolding kinetics in RNA. Nucleic Acids Research, 30(13), e63.}
+			\slidefigure{hokrefoldingkinetics} \caption{Nagel, J. H. A., Gultyaev, A. P., Oist{\"a}m{\"o}, K. J., Gerdes, K., \& Pleij, C. W. A. (2002). A pH-jump approach for investigating secondary structure refolding kinetics in RNA. Nucleic Acids Research, 30(13), e63.}
 		\end{figure}
 	\end{columns}
 \end{frame}
@@ -267,74 +320,14 @@
   \end{block}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Organization of Hermes}
-	\begin{figure}
-		\centering \slidefigure{Figures/Hermes/softwareOrg}
-	\end{figure}
-\end{frame}
-
-% All have something in common. Conservation of secondary structure across those motifs performing similar function, introducing
-% the idea of families of RNA with similar function, grouped in large part by a common secondary structure.
-% Define secondary structure, how it's more important for RNA than proteins and there exists a finite number of conformations.
-% Griffiths-Jones, S., Bateman, A., Marshall, M., Khanna, A., \& Eddy, S. R. (2003). Rfam: an RNA family database. Nucleic Acids Research, 31(1), 439--441.
-% Mean first passage time and Kevin Bacon
-% Two questions, 1) what's the fewest number of friends you have to go to before you get to Kevin Bacon, and what is the average number?
-% Temperature jump experiments, FRET, single molecule mechanical tension
-
-\begin{frame}
-	\frametitle{Comparison of various kinetics programs}
-  \resizebox{\linewidth}{!}{
-    \centering
-  	\begin{tabular}
-  		{*{9}{l}} \toprule \small{Hastings (Yes\textbackslash No)} & \small{\rnamfpt} & \small{\rnaeq} & \small{\kinfold} & \small{\fftmfpt} & \small{\rnatwofold} & \small{\fftbor} & \small{\barrierseq} & \small{\ffteq} \\
-  		\cmidrule(l){2-9}
-  		% rnamfpt rnaeq kinfold fftmfpt rnatwofold fftbor barrierseq ffteq
-  		\small{\rnamfpt} & $1$ & $0.5683$ & \textcolor{red}{$0.7945$} & \textcolor{red}{$0.5060$} & $0.5110$ & $0.5204$ & $0.5280$ & $0.4472$ \\
-  		\small{\rnaeq} & $0.5798$ & $1$ & $0.7814$ & $0.7043$ & $0.7025$ & $0.5080$ & \textcolor{blue}{$0.5979$} & \textcolor{blue}{$0.6820$} \\
-  		\small{\kinfold} & \textcolor{red}{\textbf{$0.7933$}} & $0.7507$ & $1$ & \textcolor{red}{$0.7312$} & $0.7358$ & $0.6241$ & $0.6328$ & $0.6445$ \\
-  		\small{\fftmfpt} & \textcolor{red}{\textbf{$0.6035$}} & $0.7935$ & \textcolor{red}{$0.7608$} & $1$ & $0.9980$ & $0.5485$ & $0.8614$ & $0.9589$ \\
-  		\small{\rnatwofold} & $0.6076$ & $0.7919$ & $0.7655$ & $0.9983$ & $1$ & $0.5584$ & $0.8538$ & $0.9515$ \\
-  		\small{\fftbor} & $0.5416$ & $0.5218$ & $0.6241$ & $0.5748$ & $0.5855$ & $1$ & $0.3450$ & $0.4229$ \\
-  		\small{\barrierseq} & $0.6346$ & \textcolor{blue}{$0.6578$} & $0.6328$ & $0.8310$ & $0.8217$ & $0.3450$ & $1$ & \textcolor{blue}{$0.9149$} \\
-  		\small{\ffteq} & $0.5614$ & \textcolor{blue}{$0.7916$} & $0.6966$ & $0.9670$ & $0.9590$ & $0.4757$ & \textcolor{blue}{$0.8940$} & $1$ \\
-  		\bottomrule
-  	\end{tabular}
-	} \vspace{2em}
-	\begin{itemize}
-		\scriptsize
-		\item \rnamfpt, \fftmfpt, \rnaeq, and \ffteq included in the \hermes package
-		\item \rnatwofold (Lorenz {\em et. al.}, 2009), \barrierseq (Flamm {\em et. al.}, 2002), and \fftbor (Senter {\em et. al.}, 2012) kinetics computed with \hermes
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-  \frametitle{RNA representation}
-  \begin{block}
-    {Sequence} An RNA sequence is a string $\seq = \seqN$, where $s_i \in \{\text{A,\,U,\,G,\,C}\}$
-  \end{block}
-  \begin{block}
-    {Structure} An secondary structure \str compatible with \seq is a collection of base pair tuples such $(i,j)$, such that:
-    \begin{itemize}
-      \item $(\seq_i, \seq_j) \in \bpSet$
-      \item $1 \le i \le i+\theta < j \le n$ where $\theta \ge 0$
-      \item Given $(i,j), (x,y)$ from \str, $i=x \iff j=y$
-      \item Given $(i,j), (x,y)$ from \str, $i<x<j \iff i<y<j$
-    \end{itemize}
-  \end{block}
-  \begin{align*}
-    \bpSet = \{\text{(A,\,U),\,(U,\,A),\,(G,\,C),\,(C,\,G),\,(G,\,U),\,(U,\,G)}\}
-  \end{align*}
-\end{frame}
+\section{The road to Hermes}
 
 \begin{frame}
   \frametitle{Structural motifs}
   \begin{columns}
     \column{.65\textwidth}
     \begin{figure}
-      \centering
-      \slidefigure{rnass}
-      \caption{Lu, X.-J., Bussemaker, H. J., \& Olson, W. K. (2015). DSSR: an integrated software tool for dissecting the spatial structure of RNA. Nucleic Acids Research.}
+      \slidefigure{rnass} \caption{Lu, X.-J., Bussemaker, H. J., \& Olson, W. K. (2015). DSSR: an integrated software tool for dissecting the spatial structure of RNA. Nucleic Acids Research.}
     \end{figure}
 
     \column{.35\textwidth}
@@ -353,230 +346,649 @@
 \end{frame}
 
 \begin{frame}
-  \frametitle{Base pair distance}
-  \begin{block}
-    {Symmetric distance}
-    \begin{align*}
-      \dBP{\str}{\strT} = |\str \cup \strT| - |\str \cap \strT|
-    \end{align*}
-  \end{block}
-  \begin{block}
-    {Distance between two structures}
-    \begin{align*}
-      \begin{split}
-        \dBP{\str_{[i,j]}}{\strT_{[i,j]}} &= |\{ (x,y): i \leq x<y\leq j, \\
-        & (x,y) \in \str - \strT \text{ or } (x,y) \in \strT - \str \}| = k
-      \end{split}
-    \end{align*}
-  \end{block}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Performance characteristics}
-	\begin{columns}
-		\column{.5\textwidth}
-		\begin{figure}
-      \includegraphics[width=\linewidth]{Figures/FFTbor2D/ffttwoRtwofoldTiming}
-      \caption{\ffttwo vs. \rnatwofold benchmarking}
-    \end{figure}
-
-		\column{.5\textwidth}
+  \frametitle{Secondary structure of RNA}
+  \begin{columns}
+    \column{.65\textwidth}
     \begin{figure}
-      \includegraphics[width=\linewidth]{Figures/FFTbor2D/ffttwoRtwofoldLogScale}
-      \caption{\ffttwo vs. \rnatwofold benchmarking (log scale)}
+      \slidefigure{rnass} \caption{Lu, X.-J., Bussemaker, H. J., \& Olson, W. K. (2015). DSSR: an integrated software tool for dissecting the spatial structure of RNA. Nucleic Acids Research.}
     \end{figure}
-	\end{columns}
+
+    \column{.35\textwidth}
+    \begin{block}
+      {Symmetric distance}
+      \resizebox{\linewidth}{!}{
+      \begin{minipage}{\linewidth}
+        \begin{align*}
+          \dBP{\str}{\strT} = |\str \cup \strT| - |\str \cap \strT|
+        \end{align*}
+      \end{minipage}
+      }
+    \end{block}
+    \begin{block}
+      {Distance between two structures}
+      \resizebox{\linewidth}{!}{
+      \begin{minipage}{\linewidth}
+        \begin{align*}
+          \begin{split}
+            \dBP{& \str_{[i,j]}}{\strT_{[i,j]}} = \\
+             |\{ & (x,y): i \leq x<y\leq j, \\
+                 & (x,y) \in \str - \strT \text{ or } \\
+                 & (x,y) \in \strT - \str \}|
+          \end{split}
+        \end{align*}
+      \end{minipage}
+      }
+    \end{block}
+  \end{columns}
 \end{frame}
 
 \begin{frame}
-	\frametitle{Performance characteristics}
-	\begin{columns}
-		\column{.5\textwidth}
-		\includegraphics[width=\linewidth]{Figures/FFTbor2D/ffttwoRtwofoldStdev}
+  \frametitle{Base pair distance example}
 
-		\column{.5\textwidth}
-		\begin{itemize}
-			\item Approach using FFT goes from \On{7} to \On{5}
-			\item We observe a real performance gain in line with 100x speedup
-			\item Memory requirements drop from \On{4} to \On{2}
-			\item More consistent performance characteristics
-		\end{itemize}
-	\end{columns}
+  \begin{columns}[t]
+    \column{.5\textwidth}
+    \centering
+    \slidefigure[.6]{Images/bpdistex0} \\
+    \slidefigure[.6]{Images/bpdistex2}
+
+    \column{.5\textwidth}
+    \centering
+    \slidefigure[.6]{Images/bpdistex1} \\
+    \slidefigure[.6]{Images/bpdistex3}
+
+  \end{columns}
 \end{frame}
+
+% \begin{frame}
+%   \frametitle{RNA representation}
+%   \begin{block}
+%     {Sequence} An RNA sequence is a string $\seq = \seqN$, where $s_i \in \{\text{A,\,U,\,G,\,C}\}$
+%   \end{block}
+%   \begin{block}
+%     {Structure} An secondary structure \str compatible with \seq is a collection of base pair tuples such $(i,j)$, such that:
+%     \begin{itemize}
+%       \item $(\seq_i, \seq_j) \in \bpSet$
+%       \item $1 \le i \le i+\theta < j \le n$ where $\theta \ge 0$
+%       \item Given $(i,j), (x,y)$ from \str, $i=x \iff j=y$
+%       \item Given $(i,j), (x,y)$ from \str, $i<x<j \iff i<y<j$
+%     \end{itemize}
+%   \end{block}
+%   \begin{align*}
+%     \bpSet = \{\text{(A,\,U),\,(U,\,A),\,(G,\,C),\,(C,\,G),\,(G,\,U),\,(U,\,G)}\}
+%   \end{align*}
+% \end{frame}
+
+% \begin{frame}
+% 	\frametitle{Organization of Hermes}
+% 	\slidefigure{Figures/Hermes/softwareOrg}
+% \end{frame}
+
+% All have something in common. Conservation of secondary structure across those motifs performing similar function, introducing
+% the idea of families of RNA with similar function, grouped in large part by a common secondary structure.
+% Define secondary structure, how it's more important for RNA than proteins and there exists a finite number of conformations.
+% Griffiths-Jones, S., Bateman, A., Marshall, M., Khanna, A., \& Eddy, S. R. (2003). Rfam: an RNA family database. Nucleic Acids Research, 31(1), 439--441.
+% Mean first passage time and Kevin Bacon
+% Two questions, 1) what's the fewest number of friends you have to go to before you get to Kevin Bacon, and what is the average number?
+% Temperature jump experiments, FRET, single molecule mechanical tension
+
+\begin{frame}
+  \frametitle{\fftbor}
+
+  \begin{columns}
+    \column{.6\textwidth}
+    \begin{block}
+      {Objective}
+      \fftbor computes for each integer $k$, the Boltzmann probability $\pk = \rfrac{\bfZ{k}{}}{\fullZ}$ of the subensemble of structures whose \bpd to a given {\em initial} structure \strSt is $k$
+    \end{block}
+
+    \column{.4\textwidth}
+    \vspace{-4em}
+    \begin{figure}
+      \centering \includegraphics[width=.8\linewidth]{Figures/FFTbor/BX842649MFEss}
+    \end{figure}
+    \vspace{-5em}
+    \begin{figure}
+      \slidefigure{Figures/FFTbor/FFTbor_BX842649_1} \caption{{\em (Top)} MFE structure for the 97 nt thiamine pyrophosphate (TPP) riboswitch BX842649.1 277414--277318. {\em (Bottom)} BX842649.1 277414--277318 appears to have a rugged energy landscape near its \mfes, with distinct low energy structures that may compete with the MFE structure during the folding process}
+    \end{figure}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\fftbor}
+
+  \begin{columns}
+    \column{.6\textwidth}
+    \begin{align*}
+    p(k) =\frac{\bfZ{k}{}}{\fullZ} \text{ for } 0 \leq k \leq n
+    \end{align*}
+
+    \begin{align*}
+    \bfZ{k}{} =
+    \sum_{\mathclap{\substack{\str \text{ such that } \rule[-.5ex]{0pt}{0pt} \\
+     \dBP{\str}{\strSt}=k}}}\;
+    \boltzF{\str}
+    \end{align*}
+
+    \begin{align*}
+    \fullZ = \sum_{k=0}^n \bfZ{k}{}
+    \end{align*}
+
+    \column{.4\textwidth}
+    \vspace{-4em}
+    \begin{figure}
+      \centering \includegraphics[width=.8\linewidth]{Figures/FFTbor/BX842649MFEss}
+    \end{figure}
+    \vspace{-5em}
+    \begin{figure}
+      \slidefigure{Figures/FFTbor/FFTbor_BX842649_1} \caption{{\em (Top)} MFE structure for the 97 nt thiamine pyrophosphate (TPP) riboswitch BX842649.1 277414--277318. {\em (Bottom)} BX842649.1 277414--277318 appears to have a rugged energy landscape near its \mfes, with distinct low energy structures that may compete with the MFE structure during the folding process}
+    \end{figure}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Examples of correlation with SECIS}
+
+  \begin{columns}
+    \column{.5\textwidth}
+    \begin{figure}
+      \slidefigure{Figures/FFTbor/AB030643_1_4176-4241}
+      \caption{For SECIS element AB030643.1 4176--4241, the standard deviation $\sigma$ of the \fftbor distribution is 0.7276, while the logarithm base 10 of the \mfpt is 4.75}
+    \end{figure}
+
+    \column{.5\textwidth}
+    \begin{figure}
+      \slidefigure{Figures/FFTbor/AL645723_11_192421-192359}
+      \caption{For SECIS element AL645723.11 192421--192359, the standard deviation $\sigma$ of the \fftbor distribution is 2.6794, while the logarithm base 10 of the \mfpt is 5.69}
+    \end{figure}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Analysis of distributions generated by FFTbor}
+  \resizebox{\linewidth}{!}{
+    \centering
+    \begin{tabular}
+      {*{7}{r}} \toprule
+      ~ & \small{$\mu$} & \small{$\sigma$} & \small{$\rfrac{\sigma}{\mu}$} & \small{$n$} & \small{MFE} & \small{$\log_{10}(\text{MFPT})$} \\
+      \cmidrule(l){2-7}
+      \small{$\mu$} & $1$ & & & & \\
+      \small{$\sigma$} & $-0.4372$ & $1$ & & & \\
+      \small{$\rfrac{\sigma}{\mu}$} & $-0.6914$ & $0.9437$ & $1$ & & & \\
+      \small{$n$} & $0.7077$ & $-0.1590$ & $-0.3646$ & $1$ & &  \\
+      \small{MFE} & $-0.5695$ & $0.7395$ & $0.7596$ & $-0.3685$ & $1$ & \\
+      \small{$\log_{10}(\text{MFPT})$} & $-0.0363$ & \textcolor{red}{$0.4844$} & $0.3762$ & $0.4059$ & $0.3990$ & $1$ \\
+      % puts data.chomp.split(/\\/).map { |line| line.split("&")[1..-1].map { |item| item.gsub(/\s+/, "") }.reject { |item| item.empty? }.map { |number| "%.4f" % number.to_f }.join(" & ") + " \\\\" }.join(?\n)
+      \bottomrule
+    \end{tabular}
+  } \vspace{2em}
+
+  \scriptsize Pearson correlation between various aspects of selenocysteine insertion sequences from the seed alignment of Rfam family RF00031. For each of the 61 RNA sequences, we ran \fftbor, starting from empty initial structure \strSt, and we ran a Monte Carlo folding algorithm, developed by E. Freyhult and P. Clote (unpublished).
+  % \begin{itemize}
+  %   \scriptsize
+  %   \item \rnamfpt, \fftmfpt, \rnaeq, and \ffteq included in the \hermes package
+  %   \item \rnatwofold (Lorenz {\em et. al.}, 2009), \barrierseq (Flamm {\em et. al.}, 2002), and \fftbor (Senter {\em et. al.}, 2012) kinetics computed with \hermes
+  % \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\fftbor vs. \rnabor: what changed?}
+  \begin{block}
+    {Where did performance gain come from?}
+    \pause
+    \begin{itemize}
+      \item[] Rather than compute values of \bfZ{k}{} for $0 \leq k \leq n$ to generate $p(k) = \rfrac{\bfZ{k}{}}{\fullZ}$, noting that $\fullZ = \sum_{k=0}^n\bfZ{k}{}$
+      \item[] {\em \On{5} speed, \On{3} space}
+    \end{itemize}
+  \end{block}
+
+  \resizebox{\linewidth}{!}{
+  \begin{minipage}{\linewidth}
+    \begin{align*}
+    \bfZ{k}{i,j} = \bfZ{k-b_0}{i,j-1}\enspace +
+    \sum_{\substack{(s_r,s_j) \in \bpSet, \\ i \leq r<j}}\qquad
+    \sum_{\mathclap{w+w'=k-b(r)}}\enspace
+    \exp(-E_0(r,j)/RT) \cdot \bfZ{w}{i,r-1} \bfZ{w'}{r+1,j-1}
+    \end{align*}
+
+    \begin{itemize}
+      \centering
+      \scriptsize
+      \item[] $b_0 = 1$ if $j$ is base-paired in $\strSt_{[i,j]}$ and $0$ otherwise
+      \item[] $b(r) = \dBP{\strSt_{[i,j]}}{\strSt_{[i,r-1]} \cup \strSt_{[r+1,j-1]} \cup \{(r,j)\}}$
+    \end{itemize}
+  \end{minipage}
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{\fftbor vs. \rnabor: what changed?}
+  \begin{block}
+    {Where did performance gain come from?}
+    \begin{itemize}
+      \item[] Evaluate the polynomial \fullZx for values \kRoU, where $0 \leq k \leq n$ to generate $y_0, y_1, \dots, y_n$
+      \item[] Use polynomial interpolation to find the coefficients of the polynomial $\fullZx = \sum_{k=0}^n z_k\,x^k$, where $z_k = \bfZ{k}{}$
+      \item[] {\em \On{4} speed, \On{2} space}
+    \end{itemize}
+  \end{block}
+
+  \resizebox{\linewidth}{!}{
+  \begin{minipage}{\linewidth}
+    \begin{align*}
+    \emZ{i,j} = \emZ{i,j-1} \cdot x^{b_0} +
+    \sum_{\substack{(s_r,s_j) \in \bpSet, \\ i\le r<j}}
+    \left(
+    \boltzNuss{r,j} \cdot \emZ{i,r-1} \cdot \emZ{r+1,j-1} \cdot x^{b(r)}
+    \right)
+    \end{align*}
+
+    \begin{itemize}
+      \centering
+      \scriptsize
+      \item[] $b_0 = 1$ if $j$ is base-paired in $\strSt_{[i,j]}$ and $0$ otherwise
+      \item[] $b(r) = \dBP{\strSt_{[i,j]}}{\strSt_{[i,r-1]} \cup \strSt_{[r+1,j-1]} \cup \{(r,j)\}}$
+    \end{itemize}
+  \end{minipage}
+  }
+\end{frame}
+
+\begin{frame}
+  \frametitle{Performance characteristics}
+  \begin{columns}
+    \column{.5\textwidth}
+    \begin{figure}
+      \slidefigure{Figures/FFTbor/rnaborfftborRunTimeEvan} \caption{\rnabor vs. \fftbor benchmarking}
+    \end{figure}
+
+    \column{.5\textwidth}
+    \begin{figure}
+      \slidefigure{Figures/FFTbor/fftborParallelRunTimes} \caption{Parallelized \fftbor benchmarking}
+    \end{figure}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Where does this take us?}
+  \begin{block}
+    {MFPT and $\sigma$}
+    Correlation between folding time and $\sigma$ suggests the coarse-grained landscape can be used to approximate kinetics
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{\ffttwo}
+
+  \begin{columns}
+    \column{.6\textwidth}
+    \resizebox{\linewidth}{!}{
+    \begin{minipage}{\linewidth}
+      \begin{align*}
+      \begin{split}
+      &\emZof{i,j-1}{x} \cdot x^{\alpha_0n+\beta_0} + \\
+      &\sum_{\substack{(s_k,s_j) \in \bpSet,\\i\le k<j}}
+      \left(\boltzNuss{k,j}\cdot
+      \emZof{i,k-1}{x} \cdot \emZof{k+1,j-1}{x}\cdot x^{\alpha(k)n+\beta(k)} \right)
+      \end{split}
+      \end{align*}
+
+      \begin{minipage}{1.25\linewidth}
+      \begin{itemize}
+        \scriptsize
+        \setlength\itemsep{.75em}
+        \item[] $\alpha_0 = 1$ if $j$ is base-paired in $\strA_{[i,j]}$, 0 otherwise
+        \item[] $\beta_0 = 1$ if $j$ is base-paired in $\strB_{[i,j]}$, 0 otherwise
+        \item[] $\alpha(k) = \dBP{\strA_{[i,j]}}{\strA_{[i,k-1]} \cup \strA_{[k+1,j-1]} \cup \{ (k,j) \}}$
+        \item[] $\beta(k) = \dBP{\strB_{[i,j]}}{\strB_{[i,k-1]} \cup \strB_{[k+1,j-1]} \cup \{ (k,j) \}}$
+      \end{itemize}
+      \end{minipage}
+
+    \end{minipage}
+    }
+
+    \column{.4\textwidth}
+    \begin{figure}
+      \centering \slidefigure{Figures/FFTbor2D/ffttwoProbContour} \caption{\twoD projection of energy landscape for SL RNA from {\em L. collosoma}, as computed by \ffttwo}
+    \end{figure}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Performance characteristics}
+  \begin{columns}
+    \column{.5\textwidth}
+    \begin{figure}
+      \slidefigure{Figures/FFTbor2D/ffttwoRtwofoldTiming} \caption{\ffttwo vs. \rnatwofold benchmarking}
+    \end{figure}
+
+    \column{.5\textwidth}
+    \begin{figure}
+      \slidefigure{Figures/FFTbor2D/ffttwoRtwofoldLogScale} \caption{\ffttwo vs. \rnatwofold benchmarking (log scale)}
+    \end{figure}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Performance characteristics}
+  \begin{columns}
+    \column{.5\textwidth}
+    \includegraphics[width=\linewidth]{Figures/FFTbor2D/ffttwoRtwofoldStdev}
+
+    \column{.5\textwidth}
+    \begin{itemize}
+      \item Approach using FFT goes from \On{7} to \On{5}
+      \item We observe a real performance gain in line with 100x speedup
+      \item Memory requirements drop from \On{4} to \On{2}
+      \item More consistent performance characteristics
+    \end{itemize}
+  \end{columns}
+\end{frame}
+
+\section{Kinetics with Hermes}
+
+\begin{frame}
+  \frametitle{Using \ffttwo as input for \hermes}
+
+  \begin{columns}
+    \column{.5\textwidth}
+    \begin{figure}
+      \slidefigure{Figures/FFTbor2D/ffttwoProbContour} \caption{\twoD projection of energy landscape for SL RNA from {\em L. collosoma}, as computed by \ffttwo}
+    \end{figure}
+
+    \column{.5\textwidth}
+    \begin{figure}
+      \slidefigure{Images/markov} \caption{``Markovkate 01'' by Joxemai4 - Own work. Licensed under CC BY-SA 3.0 via Commons}
+    \end{figure}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Organization of Hermes}
+  \slidefigure{Figures/Hermes/softwareOrg}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Comparison of various kinetics programs}
+
+  \begin{columns}
+    \column{.5\textwidth}
+    \begin{figure}
+      \slidefigure{Figures/Hermes/rnaMfptHastingsRnaEq} \caption{Scatter plots of the natural logarithm of times from \rnamfpt versus \rnaeq}
+    \end{figure}
+
+    \column{.5\textwidth}
+    \begin{figure}
+      \slidefigure{Figures/Hermes/rnaEqKinfold} \caption{Scatter plots of the natural logarithm of times from \rnaeq versus \kinfold}
+    \end{figure}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Comparison of various kinetics programs}
+
+  \begin{columns}
+    \column{.5\textwidth}
+    \begin{figure}
+      \slidefigure{Figures/Hermes/rnaMfptHastingsKinfold} \caption{Scatter plots of the natural logarithm of times from \rnamfpt versus \rnaeq}
+    \end{figure}
+
+    \column{.5\textwidth}
+    \begin{figure}
+      \slidefigure{Figures/Hermes/rnaMfptHastingsFftMfptHastings} \caption{Scatter plots of the natural logarithm of times from \rnamfpt versus \fftmfpt}
+    \end{figure}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Comparison of various kinetics programs}
+
+  \begin{columns}
+    \column{.5\textwidth}
+    \begin{figure}
+      \slidefigure{Figures/Hermes/kinfoldFftMfptHastings} \caption{Scatter plots of the natural logarithm of times from \kinfold versus \fftmfpt}
+    \end{figure}
+
+    \column{.5\textwidth}
+    \begin{figure}
+      \slidefigure{Figures/Hermes/fftMfptFftEq} \caption{Scatter plots of the natural logarithm of times from \fftmfpt versus \ffteq}
+    \end{figure}
+  \end{columns}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Comparison of various kinetics programs}
+  \resizebox{\linewidth}{!}{
+    \centering
+    \begin{tabular}
+      {*{9}{l}} \toprule \small{Hastings (Yes\textbackslash No)} & \small{\rnamfpt} & \small{\rnaeq} & \small{\kinfold} & \small{\fftmfpt} & \small{\rnatwofold} & \small{\fftbor} & \small{\barrierseq} & \small{\ffteq} \\
+      \cmidrule(l){2-9}
+      % rnamfpt rnaeq kinfold fftmfpt rnatwofold fftbor barrierseq ffteq
+      \small{\rnamfpt} & $1$ & $0.5683$ & \textcolor{red}{$0.7945$} & \textcolor{red}{$0.5060$} & $0.5110$ & $0.5204$ & $0.5280$ & $0.4472$ \\
+      \small{\rnaeq} & $0.5798$ & $1$ & $0.7814$ & $0.7043$ & $0.7025$ & $0.5080$ & \textcolor{blue}{$0.5979$} & \textcolor{blue}{$0.6820$} \\
+      \small{\kinfold} & \textcolor{red}{\textbf{$0.7933$}} & $0.7507$ & $1$ & \textcolor{red}{$0.7312$} & $0.7358$ & $0.6241$ & $0.6328$ & $0.6445$ \\
+      \small{\fftmfpt} & \textcolor{red}{\textbf{$0.6035$}} & $0.7935$ & \textcolor{red}{$0.7608$} & $1$ & $0.9980$ & $0.5485$ & $0.8614$ & $0.9589$ \\
+      \small{\rnatwofold} & $0.6076$ & $0.7919$ & $0.7655$ & $0.9983$ & $1$ & $0.5584$ & $0.8538$ & $0.9515$ \\
+      \small{\fftbor} & $0.5416$ & $0.5218$ & $0.6241$ & $0.5748$ & $0.5855$ & $1$ & $0.3450$ & $0.4229$ \\
+      \small{\barrierseq} & $0.6346$ & \textcolor{blue}{$0.6578$} & $0.6328$ & $0.8310$ & $0.8217$ & $0.3450$ & $1$ & \textcolor{blue}{$0.9149$} \\
+      \small{\ffteq} & $0.5614$ & \textcolor{blue}{$0.7916$} & $0.6966$ & $0.9670$ & $0.9590$ & $0.4757$ & \textcolor{blue}{$0.8940$} & $1$ \\
+      \bottomrule
+    \end{tabular}
+  } \vspace{2em}
+  \begin{itemize}
+    \scriptsize
+    \item \rnamfpt, \fftmfpt, \rnaeq, and \ffteq included in the \hermes package
+    \item \rnatwofold (Lorenz {\em et. al.}, 2009), \barrierseq (Flamm {\em et. al.}, 2002), and \fftbor (Senter {\em et. al.}, 2012) kinetics computed with \hermes
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{The big picture}
+
+  \begin{block}
+    {What's the big picture?}
+    \begin{itemize}
+    \item<1-> \hermes presents a collection of tools that allow one to quickly estimate RNA kinetics
+    \item<2-> Deterministic approach (doesn't use sampling)
+    \item<3-> Performance is in a class of its own thanks to \ffttwo
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Acknowledgements}
+
+  \begin{itemize}
+  \item Prof. Peter Clote
+  \item Commitee members: Profs. Michelle Meyer, Welkin Johnson, Michael Zuker, and Fran{\c c}ois Major
+  \item Department faculty and administration (especially Peter Marino, I don't think I ever had to enroll in a class myself)
+  \item Family and friends
+  \end{itemize}
+\end{frame}
+
+% \begin{frame}
+%   \frametitle{Base pair distance}
+%   \begin{block}
+%     {Symmetric distance}
+%     \begin{align*}
+%       \dBP{\str}{\strT} = |\str \cup \strT| - |\str \cap \strT|
+%     \end{align*}
+%   \end{block}
+%   \begin{block}
+%     {Distance between two structures}
+%     \begin{align*}
+%       \begin{split}
+%         \dBP{\str_{[i,j]}}{\strT_{[i,j]}} &= |\{ (x,y): i \leq x<y\leq j, \\
+%         & (x,y) \in \str - \strT \text{ or } (x,y) \in \strT - \str \}| = k
+%       \end{split}
+%     \end{align*}
+%   \end{block}
+% \end{frame}
 
 \begin{frame}
 	\frametitle{And of course my labmates and fellow grad students!}
-	\begin{figure}
-		\centering
-		\includegraphics[width=\linewidth]{labmates}
-	\end{figure}
+	\slidefigure{labmates}
 \end{frame}
 
 \begin{frame}
 	\frametitle{Questions?}
-	\begin{figure}
-		\centering
-		\includegraphics[width=\linewidth]{questions}
-	\end{figure}
+	\slidefigure{questions}
 \end{frame}
 
-\section{Problem definition}
+% \section{Problem definition}
 
-\begin{frame}
-	\frametitle{Problem Definition}
-	\begin{block}
-		{Desire} Given an input sequence \seq and two input structures \strA, \strB, we would like to compute \alert{all} possible structures \strS compatible with \seq, and bin them into discrete sets based on their {\em distance} to \strA and \strB
-	\end{block}
-	\begin{alertblock}
-		{Issue} Consider $\mathbb{S}$ to be the set of all structures compatible with \seq. It has been shown that $|\mathbb{S}|$ grows exponentially with sequence length $n$
-	\end{alertblock}
-	\begin{block}
-		{Refinement} Rather than store $\mathbb{S}$ at any point in time, we will use dynamic programming to compute the thermodynamic properties of these bins
-	\end{block}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{Problem Definition}
+% 	\begin{block}
+% 		{Desire} Given an input sequence \seq and two input structures \strA, \strB, we would like to compute \alert{all} possible structures \strS compatible with \seq, and bin them into discrete sets based on their {\em distance} to \strA and \strB
+% 	\end{block}
+% 	\begin{alertblock}
+% 		{Issue} Consider $\mathbb{S}$ to be the set of all structures compatible with \seq. It has been shown that $|\mathbb{S}|$ grows exponentially with sequence length $n$
+% 	\end{alertblock}
+% 	\begin{block}
+% 		{Refinement} Rather than store $\mathbb{S}$ at any point in time, we will use dynamic programming to compute the thermodynamic properties of these bins
+% 	\end{block}
+% \end{frame}
 
-\begin{frame}
-	\frametitle{Parameterized Partition Function, 1D}
-	\begin{block}
-		{\bfZ{}{} binned by $k$}
-		\begin{align*}
-			\bfZ{k}{} = \bfZ{k}{1,n} = \sum_{\mathclap{\substack{\str \text{ such that }\rule[-.5ex]{0pt}{0pt} \\
-			\dBP{\str}{\strSt}=k}}}\; \boltzF{\str}
-		\end{align*}
-	\end{block}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{Parameterized Partition Function, 1D}
+% 	\begin{block}
+% 		{\bfZ{}{} binned by $k$}
+% 		\begin{align*}
+% 			\bfZ{k}{} = \bfZ{k}{1,n} = \sum_{\mathclap{\substack{\str \text{ such that }\rule[-.5ex]{0pt}{0pt} \\
+% 			\dBP{\str}{\strSt}=k}}}\; \boltzF{\str}
+% 		\end{align*}
+% 	\end{block}
+% \end{frame}
 
-\begin{frame}
-	\frametitle{Recursions to compute \bfZ{k}{i,j}}
-	\begin{block}
-		{Structural decomposition from one target}
-		\begin{align*}
-			\bfZ{k}{i,j} = \bfZ{k-b_0}{i,j-1}\enspace + \sum_{\substack{s_r s_j \in \bpSet, \\
-			i \le r<j}} \left( \boltzNuss{r,j}\enspace \sum_{\mathclap{w+w'=k-b(r)}}\quad \bfZ{w}{i,r-1} \bfZ{w'}{r+1,j-1} \right)
-		\end{align*}
-	\end{block}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{Recursions to compute \bfZ{k}{i,j}}
+% 	\begin{block}
+% 		{Structural decomposition from one target}
+% 		\begin{align*}
+% 			\bfZ{k}{i,j} = \bfZ{k-b_0}{i,j-1}\enspace + \sum_{\substack{s_r s_j \in \bpSet, \\
+% 			i \le r<j}} \left( \boltzNuss{r,j}\enspace \sum_{\mathclap{w+w'=k-b(r)}}\quad \bfZ{w}{i,r-1} \bfZ{w'}{r+1,j-1} \right)
+% 		\end{align*}
+% 	\end{block}
+% \end{frame}
 
-\begin{frame}
-	\frametitle{Parameterized Partition Function, 2D}
-	\begin{block}
-		{\bfZ{}{} binned by $x,y$ pairs}
-		\begin{align*}
-			\bfZ{x,y}{1,n}\;=\; \sum_{\mathclap{\substack{ \str \text{ such that } \rule[-.5ex]{0pt}{0pt} \\
-			\dBP{\str}{\strA} = x,\,\dBP{\str}{\strB} = y}}}\enspace \boltzF{\str}
-		\end{align*}
-	\end{block}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{Parameterized Partition Function, 2D}
+% 	\begin{block}
+% 		{\bfZ{}{} binned by $x,y$ pairs}
+% 		\begin{align*}
+% 			\bfZ{x,y}{1,n}\;=\; \sum_{\mathclap{\substack{ \str \text{ such that } \rule[-.5ex]{0pt}{0pt} \\
+% 			\dBP{\str}{\strA} = x,\,\dBP{\str}{\strB} = y}}}\enspace \boltzF{\str}
+% 		\end{align*}
+% 	\end{block}
+% \end{frame}
 
-\begin{frame}
-	\frametitle{Recursions to compute \bfZ{x,y}{i,j}}
-	\begin{block}
-		{Structural decomposition from two targets}
-		\begin{align*}
-			\begin{split}
-				& \bfZ{x,y}{i,j} = \bfZ{x- \omega_0,y-\beta_0}{i,j-1}\enspace + \\
-				& \sum_{\substack{s_k s_j \in \bpSet, \\
-				i \le k<j}} \left( \boltzNuss{k,j}\quad \sum_{\mathclap{u+u'=x- \omega(k)}}\hspace{3.75em} \sum_{\mathclap{v+v'=y-\beta(k)}}\quad \bfZ{u,v}{i,k-1} \cdot \bfZ{u',v'}{k+1,j-1} \right)
-			\end{split}
-		\end{align*}
-	\end{block}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{Recursions to compute \bfZ{x,y}{i,j}}
+% 	\begin{block}
+% 		{Structural decomposition from two targets}
+% 		\begin{align*}
+% 			\begin{split}
+% 				& \bfZ{x,y}{i,j} = \bfZ{x- \omega_0,y-\beta_0}{i,j-1}\enspace + \\
+% 				& \sum_{\substack{s_k s_j \in \bpSet, \\
+% 				i \le k<j}} \left( \boltzNuss{k,j}\quad \sum_{\mathclap{u+u'=x- \omega(k)}}\hspace{3.75em} \sum_{\mathclap{v+v'=y-\beta(k)}}\quad \bfZ{u,v}{i,k-1} \cdot \bfZ{u',v'}{k+1,j-1} \right)
+% 			\end{split}
+% 		\end{align*}
+% 	\end{block}
+% \end{frame}
 
-\begin{frame}
-	\frametitle{Partition function of a variable $x$}
-	\begin{block}
-		{Only compute \emZ{i,j}{x} instead of \bfZ{x,y}{i,j}}
-		\begin{align*}
-			\begin{split}
-				& \emZ{i,j} = \emZof{i,j-1}{x} \cdot x^{ \omega_0n+\beta_0} + \\
-				&\sum_{\substack{s_k s_j \in \bpSet,\\i\le k<j}} \left(e^{\frac{-E_0(k,j)}{RT}}\cdot \emZof{i,k-1}{x} \cdot \emZof{k+1,j-1}{x}\cdot x^{ \omega(k)n+\beta(k)} \right)
-			\end{split}
-		\end{align*}
-	\end{block}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{Partition function of a variable $x$}
+% 	\begin{block}
+% 		{Only compute \emZ{i,j}{x} instead of \bfZ{x,y}{i,j}}
+% 		\begin{align*}
+% 			\begin{split}
+% 				& \emZ{i,j} = \emZof{i,j-1}{x} \cdot x^{ \omega_0n+\beta_0} + \\
+% 				&\sum_{\substack{s_k s_j \in \bpSet,\\i\le k<j}} \left(e^{\frac{-E_0(k,j)}{RT}}\cdot \emZof{i,k-1}{x} \cdot \emZof{k+1,j-1}{x}\cdot x^{ \omega(k)n+\beta(k)} \right)
+% 			\end{split}
+% 		\end{align*}
+% 	\end{block}
+% \end{frame}
 
-\begin{frame}
-	\frametitle{FFT background}
-	\begin{block}
-		{Complex {\em k}th roots of unity}
-		\begin{align*}
-			\omega_0=\exp(\frac{0\cdot 2\pi i}{n^2}), \omega_1=\exp(\frac{1\cdot 2\pi i}{n^2}),\dots, \omega_{n^2-1}=\exp(\frac{(n^2-1)\cdot 2\pi i}{n^2})
-		\end{align*}
-	\end{block}
-	\begin{block}
-		{Evaluate \emZ{i,j}{x} for all $n^2$ roots of unity}
-		\begin{align*}
-			y_0=\emZof{}{ \omega_0},\dots,y_{n^2-1}=\emZof{}{ \omega_{n^2-1}})
-		\end{align*}
-	\end{block}
-	\begin{block}
-		{Represent results of evaluation in column form}
-		\begin{align*}
-			\bfY = (y_0,\dots,y_{n^2-1})^{\text T}
-		\end{align*}
-	\end{block}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{FFT background}
+% 	\begin{block}
+% 		{Complex {\em k}th roots of unity}
+% 		\begin{align*}
+% 			\omega_0=\exp(\frac{0\cdot 2\pi i}{n^2}), \omega_1=\exp(\frac{1\cdot 2\pi i}{n^2}),\dots, \omega_{n^2-1}=\exp(\frac{(n^2-1)\cdot 2\pi i}{n^2})
+% 		\end{align*}
+% 	\end{block}
+% 	\begin{block}
+% 		{Evaluate \emZ{i,j}{x} for all $n^2$ roots of unity}
+% 		\begin{align*}
+% 			y_0=\emZof{}{ \omega_0},\dots,y_{n^2-1}=\emZof{}{ \omega_{n^2-1}})
+% 		\end{align*}
+% 	\end{block}
+% 	\begin{block}
+% 		{Represent results of evaluation in column form}
+% 		\begin{align*}
+% 			\bfY = (y_0,\dots,y_{n^2-1})^{\text T}
+% 		\end{align*}
+% 	\end{block}
+% \end{frame}
 
-\begin{frame}
-	\frametitle{Vandermonde matrix}
-	\begin{block}
-		{Matrix construction}
-		\begin{align*}
-			V_{n} = \left(
-			\begin{array}{rrrrr}
-				1 & 1 & 1 & \dots & 1 \\
-				1 & \omega & \omega^2 & \dots & \omega^{n-1} \\
-				1 & \omega^2 & \omega^4 & \dots & \omega^{2(n-1)} \\
-				1 & \omega^3 & \omega^6 & \dots & \omega^{3(n-1)} \\
-				\vdots & \vdots & \vdots & \vdots & \vdots \\
-				1 & \omega^{n-1} & \omega^{2(n-1)} & \dots & \omega^{(n-1)(n-1)} \\
-			\end{array}
-			\right)
-		\end{align*}
-	\end{block}
-\end{frame}
+% \begin{frame}
+% 	\frametitle{Vandermonde matrix}
+% 	\begin{block}
+% 		{Matrix construction}
+% 		\begin{align*}
+% 			V_{n} = \left(
+% 			\begin{array}{rrrrr}
+% 				1 & 1 & 1 & \dots & 1 \\
+% 				1 & \omega & \omega^2 & \dots & \omega^{n-1} \\
+% 				1 & \omega^2 & \omega^4 & \dots & \omega^{2(n-1)} \\
+% 				1 & \omega^3 & \omega^6 & \dots & \omega^{3(n-1)} \\
+% 				\vdots & \vdots & \vdots & \vdots & \vdots \\
+% 				1 & \omega^{n-1} & \omega^{2(n-1)} & \dots & \omega^{(n-1)(n-1)} \\
+% 			\end{array}
+% 			\right)
+% 		\end{align*}
+% 	\end{block}
+% \end{frame}
 
-\begin{frame}
-	\begin{definition}
-		Define the FFT to be the $O(n \log n)$ algorithm to compute the Discrete Fourier Transform (DFT), defined as the matrix product $\bfY = V_{n} {\bf A}$
-	\end{definition}
-	\begin{align*}
-		\left(
-		\begin{array}{l}
-			y_0 \\
-			y_1 \\
-			y_2 \\
-			\vdots \\
-			y_{n^2-1} \\
-		\end{array}
-		\right) = V_n \cdot \left(
-		\begin{array}{l}
-			a_0 \\
-			a_1 \\
-			a_2 \\
-			\vdots \\
-			a_{n^2-1} \\
-		\end{array}
-		\right)
-	\end{align*}
-\end{frame}
+% \begin{frame}
+% 	\begin{definition}
+% 		Define the FFT to be the $O(n \log n)$ algorithm to compute the Discrete Fourier Transform (DFT), defined as the matrix product $\bfY = V_{n} {\bf A}$
+% 	\end{definition}
+% 	\begin{align*}
+% 		\left(
+% 		\begin{array}{l}
+% 			y_0 \\
+% 			y_1 \\
+% 			y_2 \\
+% 			\vdots \\
+% 			y_{n^2-1} \\
+% 		\end{array}
+% 		\right) = V_n \cdot \left(
+% 		\begin{array}{l}
+% 			a_0 \\
+% 			a_1 \\
+% 			a_2 \\
+% 			\vdots \\
+% 			a_{n^2-1} \\
+% 		\end{array}
+% 		\right)
+% 	\end{align*}
+% \end{frame}
 
-\begin{frame}
-	Since we defined $\bfY = (y_0,\dots,y_{n-1})^{\text T}$, where:
-	\begin{align*}
-		y_0=\emZof{}{\omega_0},\dots,y_{n^2-1}=\emZof{}{\omega{n^2-1}})
-	\end{align*}
+% \begin{frame}
+% 	Since we defined $\bfY = (y_0,\dots,y_{n-1})^{\text T}$, where:
+% 	\begin{align*}
+% 		y_0=\emZof{}{\omega_0},\dots,y_{n^2-1}=\emZof{}{\omega{n^2-1}})
+% 	\end{align*}
 
-	and $\omega_k = \exp(\frac{2\pi ki}{n^2})$, it follows that the coefficients $c_{rn+s}=\bfZ{rn+s}{1,n}$ in the polynomial:
-	\begin{align*}
-		\emZ{} = c_0 + c_1 x + \dots + c_{n^2-1} x^{n^2-1}
-	\end{align*}
+% 	and $\omega_k = \exp(\frac{2\pi ki}{n^2})$, it follows that the coefficients $c_{rn+s}=\bfZ{rn+s}{1,n}$ in the polynomial:
+% 	\begin{align*}
+% 		\emZ{} = c_0 + c_1 x + \dots + c_{n^2-1} x^{n^2-1}
+% 	\end{align*}
 
-	can be computed using the \fft, and:
-	\begin{align*}
-		c_{rn+s}=\;=\; \sum_{\mathclap{\substack{ \str \text{ such that } \rule[-.5ex]{0pt}{0pt} \\
-		\dBP{\str}{\strA} = r,\,\dBP{\str}{\strB} = s}}}\enspace \boltzF{\str}
-	\end{align*}
-\end{frame}
+% 	can be computed using the \fft, and:
+% 	\begin{align*}
+% 		c_{rn+s}=\;=\; \sum_{\mathclap{\substack{ \str \text{ such that } \rule[-.5ex]{0pt}{0pt} \\
+% 		\dBP{\str}{\strA} = r,\,\dBP{\str}{\strB} = s}}}\enspace \boltzF{\str}
+% 	\end{align*}
+% \end{frame}
 
 \end{document}
